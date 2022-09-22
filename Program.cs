@@ -1,17 +1,21 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddMvc();
-builder.Services.AddControllersWithViews();
-
+builder.Services.AddAuthentication("Cookie")
+    .AddCookie("Cookie", config =>
+    {
+        config.LoginPath = "/Admin/Login";
+    });
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
 
 app.UseRouting();
-app.UseAuthorization();
+
+//Обязательно в таком порядке, иначе авторизация не сработает!
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapDefaultControllerRoute();
 
