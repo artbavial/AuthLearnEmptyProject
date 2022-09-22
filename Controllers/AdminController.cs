@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using AuthLearnEmptyProject.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 
 namespace AuthLearnEmptyProject.Controllers
 {
-    
+
     public class AdminController : Controller
     {
         [Authorize]
@@ -38,15 +38,11 @@ namespace AuthLearnEmptyProject.Controllers
             HttpContext.SignInAsync("Cookie", claimPrincipal);
             return Redirect(model.ReturnUrl);
         }
-    }
 
-    public class LoginViewModel
-    {
-        [Required]
-        public string UserName { get; set; }
-        [Required]
-        public string Password { get; set; }
-        [Required]
-        public string ReturnUrl { get; set; }
+        public IActionResult LogOff()
+        {
+            HttpContext.SignOutAsync("Cookie");
+            return Redirect("/Home/Index");
+        }
     }
 }
