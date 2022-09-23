@@ -7,17 +7,29 @@ using System.Security.Claims;
 
 namespace AuthLearnEmptyProject.Controllers
 {
-
+    [Authorize]
     public class AdminController : Controller
     {
-        [Authorize]
+
         public IActionResult Index()
         {
             return View();
         }
 
+        [Authorize(Policy ="Administrator")]
+        public IActionResult Administrator()
+        {
+            return View();
+        }
+
+        [Authorize(Policy = "Manager")]
+        public IActionResult Manager()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
-        public IActionResult Login( string returnUrl)
+        public IActionResult Login(string returnUrl)
         {
             return View();
         }
@@ -25,13 +37,15 @@ namespace AuthLearnEmptyProject.Controllers
         [AllowAnonymous]
         public IActionResult Login(LoginViewModel model)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
             var claims = new List<Claim>()
             {
-                new Claim("Demo", "Value")
+                new Claim(ClaimTypes.Name, model.UserName),
+                new Claim(ClaimTypes.Role, "Administrator"),
+                new Claim(ClaimTypes.Role, "Manager")
             };
             var claimIdentity = new ClaimsIdentity(claims, "Cookie");
             var claimPrincipal = new ClaimsPrincipal(claimIdentity);
